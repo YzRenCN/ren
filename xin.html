@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心理健康状态自评 (PHQ-9简化版)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            min-height: 100vh;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .option-selected {
+            background-color: #e0f2fe;
+            border-color: #0ea5e9;
+            color: #0369a1;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="text-slate-700 flex flex-col items-center justify-center p-4">
+
+    <!-- Header -->
+    <header class="w-full max-w-3xl mb-6 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800 mb-2"><i class="fas fa-heart-pulse mr-3 text-sky-500"></i>心理健康状态自评</h1>
+        <p class="text-slate-600 text-sm md:text-base">基于 PHQ-9 (患者健康问卷) 简化逻辑 · 关注您的情绪健康</p>
+    </header>
+
+    <!-- Main Container -->
+    <main id="app-container" class="w-full max-w-3xl glass-panel rounded-3xl overflow-hidden min-h-[600px] relative shadow-xl">
+        
+        <!-- Disclaimer Banner -->
+        <div class="bg-yellow-50 border-b border-yellow-100 p-3 text-xs text-yellow-800 text-center flex items-center justify-center gap-2">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>重要提示：本测试仅供自我参考，不能替代专业医生的诊断。如果您感到极度痛苦或有自伤念头，请立即寻求专业帮助。</span>
+        </div>
+
+        <!-- View: Welcome Screen -->
+        <div id="view-welcome" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center fade-in z-10 bg-white/90">
+            <div class="mb-8 max-w-lg">
+                <div class="bg-sky-100 p-6 rounded-full mb-6 inline-block shadow-sm">
+                    <i class="fas fa-hand-holding-heart text-5xl text-sky-500"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">了解最近两周的情绪状态</h2>
+                <p class="text-gray-600 leading-relaxed mb-6">
+                    这个简单的量表将帮助您评估过去两周内可能出现的抑郁症状频率。
+                    <br><br>
+                    <span class="font-medium text-sky-700">请根据您的真实感受回答，没有对错之分。</span>
+                </p>
+                
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-left text-sm text-gray-600 space-y-2">
+                    <div class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>完全匿名，数据仅保存在您的本地设备中</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>包含 9 个核心情绪维度评估</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>提供可视化的结果分析与建议</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+                <button onclick="startTest()" class="flex-1 bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg transform transition hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-sky-200">
+                    开始自评
+                </button>
+                <button onclick="showHistory()" class="flex-1 bg-white hover:bg-gray-50 text-sky-600 border-2 border-sky-100 font-bold py-3 px-6 rounded-xl shadow-sm transform transition hover:scale-[1.02] focus:outline-none">
+                    历史记录
+                </button>
+            </div>
+        </div>
+
+        <!-- View: Quiz Screen -->
+        <div id="view-quiz" class="hidden absolute inset-0 flex flex-col p-6 md:p-10 z-20 bg-white">
+            <!-- Top Bar -->
+            <div class="flex justify-between items-center mb-6">
+                <div class="text-sky-600 font-medium text-sm">
+                    <i class="fas fa-clipboard-list mr-1"></i> 情绪自评量表
+                </div>
+                <div class="text-right">
+                    <span class="text-gray-400 text-xs uppercase tracking-wider font-bold">进度</span>
+                    <span class="text-sky-600 font-bold ml-1" id="question-counter">1/9</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-100 rounded-full h-2 mb-8 overflow-hidden">
+                <div id="progress-bar" class="bg-sky-500 h-2 rounded-full progress-bar transition-all duration-500 ease-out" style="width: 0%"></div>
+            </div>
+            
+            <!-- Question Area -->
+            <div id="question-container" class="flex-grow flex flex-col justify-center items-center fade-in">
+                <div class="w-full max-w-2xl mb-8 text-center">
+                    <h3 id="question-text" class="text-xl md:text-2xl font-bold text-gray-800 leading-snug">
+                        题目加载中...
+                    </h3>
+                    <p class="text-gray-400 text-sm mt-2 italic">在过去两周里，您生活中出现以下症状的频率有多少？</p>
+                </div>
+                
+                <!-- Options Grid -->
+                <div class="grid grid-cols-1 gap-3 w-full max-w-2xl">
+                    <button onclick="selectOption(0)" class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:border-sky-200 bg-white group">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium text-gray-700 group-hover:text-sky-700">完全没有</span>
+                            <div class="h-5 w-5 rounded-full border-2 border-gray-200 flex items-center justify-center group-hover:border-sky-400">
+                                <div class="h-2.5 w-2.5 rounded-full bg-sky-500 opacity-0 transition-opacity check-indicator"></div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="selectOption(1)" class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:border-sky-200 bg-white group">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium text-gray-700 group-hover:text-sky-700">有几天</span>
+                            <div class="h-5 w-5 rounded-full border-2 border-gray-200 flex items-center justify-center group-hover:border-sky-400">
+                                <div class="h-2.5 w-2.5 rounded-full bg-sky-500 opacity-0 transition-opacity check-indicator"></div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="selectOption(2)" class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:border-sky-200 bg-white group">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium text-gray-700 group-hover:text-sky-700">一半以上的时间</span>
+                            <div class="h-5 w-5 rounded-full border-2 border-gray-200 flex items-center justify-center group-hover:border-sky-400">
+                                <div class="h-2.5 w-2.5 rounded-full bg-sky-500 opacity-0 transition-opacity check-indicator"></div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="selectOption(3)" class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:border-sky-200 bg-white group">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium text-gray-700 group-hover:text-sky-700">几乎每天</span>
+                            <div class="h-5 w-5 rounded-full border-2 border-gray-200 flex items-center justify-center group-hover:border-sky-400">
+                                <div class="h-2.5 w-2.5 rounded-full bg-sky-500 opacity-0 transition-opacity check-indicator"></div>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer Controls -->
+            <div class="mt-8 pt-6 border-t border-gray-100 flex justify-between items-center">
+                <button onclick="quitTest()" class="text-gray-400 hover:text-red-500 text-sm font-medium transition-colors">
+                    <i class="fas fa-times-circle mr-1"></i> 退出
+                </button>
+                <div class="text-gray-400 text-xs">
+                    * 请诚实作答以获得准确参考
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Loading/Calculating -->
+        <div id="view-loading" class="hidden absolute inset-0 flex flex-col items-center justify-center z-30 bg-white/95">
+            <div class="relative">
+                <div class="animate-spin rounded-full h-16 w-16 border-4 border-sky-100 border-t-sky-500"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <i class="fas fa-chart-line text-sky-500 text-lg"></i>
+                </div>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mt-6">正在分析评估结果...</h3>
+        </div>
+
+        <!-- View: Result Screen -->
+        <div id="view-result" class="hidden absolute inset-0 overflow-y-auto p-6 md:p-10 z-40 bg-white">
+            <div class="max-w-2xl mx-auto text-center">
+                <div class="mb-6">
+                    <span class="inline-block py-1 px-4 rounded-full bg-sky-100 text-sky-800 text-sm font-bold mb-4 tracking-wide">评估完成</span>
+                    <h2 class="text-5xl font-black text-slate-800 mb-2" id="result-score">0</h2>
+                    <p class="text-gray-500 font-medium uppercase tracking-widest text-xs">总分 (0-27)</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl p-6 mb-8 border border-slate-100 shadow-inner">
+                    <h3 id="result-level" class="text-2xl font-bold text-slate-800 mb-2">轻度</h3>
+                    <p id="result-desc" class="text-gray-600 text-sm leading-relaxed mb-6">
+                        描述加载中...
+                    </p>
+                    
+                    <div class="h-48 w-full relative">
+                        <canvas id="resultChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 text-left">
+                    <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+                        <h5 class="font-bold text-sky-800 mb-2 flex items-center"><i class="fas fa-user-md mr-2 text-sky-500"></i> 建议措施</h5>
+                        <ul id="advice-list" class="text-gray-600 text-sm space-y-2 list-disc list-inside">
+                            <!-- Populated by JS -->
+                        </ul>
+                    </div>
+                    <div class="bg-gradient-to-br from-sky-50 to-indigo-50 border border-sky-100 rounded-xl p-5 shadow-sm">
+                        <h5 class="font-bold text-indigo-800 mb-2 flex items-center"><i class="fas fa-phone-alt mr-2 text-indigo-500"></i> 紧急求助</h5>
+                        <p class="text-gray-600 text-sm mb-2">如果您感到无法承受或有帮助他人的想法：</p>
+                        <div class="bg-white p-3 rounded-lg border border-indigo-100 text-center">
+                            <div class="text-indigo-600 font-bold text-lg">希望24热线</div>
+                            <div class="text-gray-500 text-xs">400-161-9995</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-4 pb-8">
+                    <button onclick="restartTest()" class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-6 rounded-lg shadow transition transform hover:-translate-y-1">
+                        <i class="fas fa-redo mr-2"></i>重新测试
+                    </button>
+                    <button onclick="saveResult()" id="btn-save-result" class="bg-white border-2 border-sky-500 text-sky-600 hover:bg-sky-50 font-bold py-3 px-6 rounded-lg shadow transition">
+                        <i class="fas fa-bookmark mr-2"></i>保存记录
+                    </button>
+                    <button onclick="showHistory()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg shadow transition">
+                        <i class="fas fa-history mr-2"></i>查看历史
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: History Screen -->
+        <div id="view-history" class="hidden absolute inset-0 overflow-y-auto p-6 md:p-10 z-50 bg-white">
+            <div class="max-w-2xl mx-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-history mr-3 text-sky-500"></i> 评估历史
+                    </h2>
+                    <button onclick="backToWelcome()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium transition">
+                        <i class="fas fa-arrow-left mr-1"></i> 返回
+                    </button>
+                </div>
+                
+                <div id="history-list" class="space-y-3">
+                    <!-- History items injected here -->
+                    <div class="text-center text-gray-400 py-12 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                        <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
+                        <p>暂无历史记录</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <button onclick="clearHistory()" class="text-red-400 hover:text-red-600 text-sm font-medium underline decoration-red-200 hover:decoration-red-400 transition">
+                        清空所有历史记录
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-8 text-slate-500 text-xs font-medium text-center max-w-lg">
+        &copy; 2026 Mental Health Self-Assessment Tool. <br>
+        本工具基于 PHQ-9 (Patient Health Questionnaire-9) 逻辑设计，仅供参考。
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
