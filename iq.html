@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专业智商(IQ)逻辑测试</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            min-height: 100vh;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .option-card {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #6366f1;
+        }
+
+        .option-selected {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+            color: #4338ca;
+            ring: 2px solid #4f46e5;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col items-center justify-center p-4">
+
+    <!-- Header -->
+    <header class="w-full max-w-3xl mb-6 text-center">
+        <h1 class="text-4xl font-extrabold text-indigo-900 mb-2 drop-shadow-sm"><i class="fas fa-brain mr-3 text-indigo-600"></i>IQ 逻辑智力测试</h1>
+        <p class="text-indigo-700 font-medium opacity-80">基于瑞文标准推理测验简化版 · 评估你的逻辑思维能力</p>
+    </header>
+
+    <!-- Main Container -->
+    <main id="app-container" class="w-full max-w-3xl glass-panel rounded-3xl overflow-hidden min-h-[600px] relative shadow-2xl">
+        
+        <!-- View: Welcome Screen -->
+        <div id="view-welcome" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center fade-in z-10 bg-white/90">
+            <div class="mb-8 max-w-lg">
+                <div class="bg-indigo-100 p-6 rounded-2xl mb-6 inline-block">
+                    <i class="fas fa-lightbulb text-6xl text-indigo-500"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">准备好挑战你的大脑了吗？</h2>
+                <p class="text-gray-600 leading-relaxed mb-6">
+                    本测试包含 <span class="font-bold text-indigo-600">15道</span> 精选逻辑推理题，涵盖图形规律、数字序列和空间想象能力。
+                    <br><br>
+                    <span class="text-sm bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full"><i class="fas fa-clock mr-1"></i> 建议用时：10-15分钟</span>
+                </p>
+                
+                <div class="grid grid-cols-3 gap-4 text-left mt-8">
+                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+                        <div class="text-indigo-500 font-bold text-xl">15</div>
+                        <div class="text-xs text-gray-500">精选题目</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+                        <div class="text-indigo-500 font-bold text-xl">3</div>
+                        <div class="text-xs text-gray-500">难度维度</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+                        <div class="text-indigo-500 font-bold text-xl">IQ</div>
+                        <div class="text-xs text-gray-500">标准估算</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+                <button onclick="startTest()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg transform transition hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-indigo-300">
+                    开始测试
+                </button>
+                <button onclick="showHistory()" class="flex-1 bg-white hover:bg-gray-50 text-indigo-600 border-2 border-indigo-100 font-bold py-4 px-8 rounded-xl shadow-sm transform transition hover:scale-[1.02] focus:outline-none">
+                    历史记录
+                </button>
+            </div>
+        </div>
+
+        <!-- View: Quiz Screen -->
+        <div id="view-quiz" class="hidden absolute inset-0 flex flex-col p-6 md:p-10 z-20 bg-white">
+            <!-- Top Bar -->
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center gap-2">
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded uppercase tracking-wide" id="category-badge">逻辑推理</span>
+                    <span class="text-gray-400 text-sm" id="difficulty-badge">难度: 中等</span>
+                </div>
+                <div class="text-right">
+                    <span class="text-gray-500 text-sm font-medium">进度</span>
+                    <span class="text-indigo-600 font-bold ml-1" id="question-counter">1/15</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-100 rounded-full h-2 mb-8 overflow-hidden">
+                <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full progress-bar transition-all duration-500 ease-out" style="width: 0%"></div>
+            </div>
+            
+            <!-- Question Area -->
+            <div id="question-container" class="flex-grow flex flex-col justify-center items-center fade-in">
+                <div class="w-full max-w-2xl mb-8">
+                    <h3 id="question-text" class="text-xl md:text-2xl font-bold text-gray-800 leading-snug text-center">
+                        题目加载中...
+                    </h3>
+                    <!-- Optional Image Container for Pattern Questions -->
+                    <div id="question-image-container" class="hidden mt-6 flex justify-center">
+                        <img id="question-image" src="" alt="逻辑推理图形" class="max-h-48 rounded-lg shadow-md border border-gray-200">
+                    </div>
+                </div>
+                
+                <!-- Options Grid -->
+                <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+                    <!-- Options will be injected here by JS -->
+                </div>
+            </div>
+
+            <!-- Footer Controls -->
+            <div class="mt-8 pt-6 border-t border-gray-100 flex justify-between items-center">
+                <button onclick="quitTest()" class="text-gray-400 hover:text-red-500 text-sm font-medium transition-colors">
+                    <i class="fas fa-times-circle mr-1"></i> 放弃测试
+                </button>
+                <div id="timer-display" class="text-gray-500 font-mono text-sm">
+                    <i class="far fa-clock mr-1"></i> <span id="time-elapsed">00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Loading/Calculating -->
+        <div id="view-loading" class="hidden absolute inset-0 flex flex-col items-center justify-center z-30 bg-white/95">
+            <div class="relative">
+                <div class="animate-spin rounded-full h-20 w-20 border-4 border-indigo-100 border-t-indigo-600"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <i class="fas fa-calculator text-indigo-600 text-xl"></i>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">正在分析答题数据...</h3>
+            <p class="text-gray-500 mt-2 text-sm">计算逻辑权重与标准差</p>
+        </div>
+
+        <!-- View: Result Screen -->
+        <div id="view-result" class="hidden absolute inset-0 overflow-y-auto p-6 md:p-10 z-40 bg-white">
+            <div class="max-w-2xl mx-auto text-center">
+                <div class="mb-8">
+                    <span class="inline-block py-1 px-4 rounded-full bg-green-100 text-green-800 text-sm font-bold mb-4 tracking-wide">测试完成</span>
+                    <h2 class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-2" id="result-iq-score">120</h2>
+                    <p class="text-gray-500 font-medium uppercase tracking-widest text-sm">预估智商分数 (IQ)</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl p-6 mb-8 border border-slate-100 shadow-inner">
+                    <h4 class="text-lg font-bold text-slate-700 mb-4 flex items-center justify-center">
+                        <i class="fas fa-chart-pie mr-2 text-indigo-500"></i> 能力分布雷达图
+                    </h4>
+                    <div class="h-64 w-full relative">
+                        <canvas id="resultChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-4 text-center">*基于答对率、题目难度权重及答题速度综合计算</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 text-left">
+                    <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition">
+                        <h5 class="font-bold text-indigo-800 mb-2 flex items-center"><i class="fas fa-check-circle mr-2 text-green-500"></i> 优势分析</h5>
+                        <p id="strength-text" class="text-gray-600 text-sm leading-relaxed">
+                            您在逻辑推理方面表现出色...
+                        </p>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition">
+                        <h5 class="font-bold text-indigo-800 mb-2 flex items-center"><i class="fas fa-arrow-up mr-2 text-orange-500"></i> 提升建议</h5>
+                        <p id="advice-text" class="text-gray-600 text-sm leading-relaxed">
+                            建议加强空间想象能力的训练...
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-4 pb-8">
+                    <button onclick="restartTest()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow transition transform hover:-translate-y-1">
+                        <i class="fas fa-redo mr-2"></i>重新测试
+                    </button>
+                    <button onclick="saveResult()" id="btn-save-result" class="bg-white border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 font-bold py-3 px-6 rounded-lg shadow transition">
+                        <i class="fas fa-bookmark mr-2"></i>保存成绩
+                    </button>
+                    <button onclick="showHistory()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg shadow transition">
+                        <i class="fas fa-history mr-2"></i>查看历史
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: History Screen -->
+        <div id="view-history" class="hidden absolute inset-0 overflow-y-auto p-6 md:p-10 z-50 bg-white">
+            <div class="max-w-2xl mx-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-history mr-3 text-indigo-500"></i> 测试历史
+                    </h2>
+                    <button onclick="backToWelcome()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium transition">
+                        <i class="fas fa-arrow-left mr-1"></i> 返回主页
+                    </button>
+                </div>
+                
+                <div id="history-list" class="space-y-3">
+                    <!-- History items injected here -->
+                    <div class="text-center text-gray-400 py-12 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                        <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
+                        <p>暂无历史记录</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <button onclick="clearHistory()" class="text-red-400 hover:text-red-600 text-sm font-medium underline decoration-red-200 hover:decoration-red-400 transition">
+                        清空所有历史记录
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-8 text-indigo-900/60 text-xs font-medium">
+        &copy; 2026 IQ Logic Test. 仅供娱乐参考，非临床诊断依据。
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
