@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>病娇倾向深度测试 | Yandere Simulator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&family=Creepster&display=swap');
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #1a1a1a;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+
+        .yandere-font {
+            font-family: 'Creepster', cursive;
+        }
+
+        .glass-panel {
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 85, 0.3);
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff0055, #ff00aa);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.6);
+        }
+
+        .option-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #333;
+        }
+
+        .option-card:hover {
+            border-color: #ff0055;
+            background-color: rgba(255, 0, 85, 0.05);
+        }
+
+        .option-selected {
+            border-color: #ff0055;
+            background-color: rgba(255, 0, 85, 0.15);
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+        }
+
+        /* Glitch Effect for Title */
+        .glitch {
+            position: relative;
+            color: white;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 red;
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 blue;
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 30px, 0); }
+            20% { clip: rect(80px, 9999px, 100px, 0); }
+            40% { clip: rect(10px, 9999px, 50px, 0); }
+            60% { clip: rect(40px, 9999px, 80px, 0); }
+            80% { clip: rect(90px, 9999px, 100px, 0); }
+            100% { clip: rect(20px, 9999px, 60px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(60px, 9999px, 90px, 0); }
+            20% { clip: rect(10px, 9999px, 40px, 0); }
+            40% { clip: rect(80px, 9999px, 110px, 0); }
+            60% { clip: rect(30px, 9999px, 60px, 0); }
+            80% { clip: rect(70px, 9999px, 90px, 0); }
+            100% { clip: rect(20px, 9999px, 50px, 0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 bg-[url('https://picsum.photos/1920/1080?grayscale&blur=2')] bg-cover bg-center bg-fixed">
+    
+    <!-- Overlay for darkness -->
+    <div class="fixed inset-0 bg-black/80 z-0"></div>
+
+    <!-- Main Container -->
+    <main id="app-container" class="w-full max-w-3xl glass-panel rounded-2xl overflow-hidden min-h-[600px] relative z-10 flex flex-col">
+        
+        <!-- Header -->
+        <header class="p-6 border-b border-gray-800 flex justify-between items-center bg-black/40">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-heart-crack text-pink-600 text-2xl animate-pulse"></i>
+                <h1 class="text-2xl font-bold tracking-wider glitch" data-text="YANDERE TEST">YANDERE TEST</h1>
+            </div>
+            <button onclick="showHistory()" class="text-gray-400 hover:text-pink-500 transition">
+                <i class="fas fa-history"></i> 历史
+            </button>
+        </header>
+
+        <!-- Content Area -->
+        <div class="flex-grow relative">
+            
+            <!-- View: Welcome -->
+            <div id="view-welcome" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center fade-in">
+                <img src="https://picsum.photos/400/300?random=10&grayscale" alt="Mysterious Anime Girl Silhouette" class="rounded-lg shadow-2xl mb-6 border-2 border-pink-900/50 w-full max-w-md object-cover h-64 opacity-80 hover:opacity-100 transition duration-500">
+                <h2 class="text-3xl font-bold text-white mb-4">你有多“病娇”？</h2>
+                <p class="text-gray-400 mb-8 max-w-lg">
+                    爱到极致是占有，还是毁灭？<br>
+                    通过15个情境测试，解析你潜意识中的依恋类型与危险指数。<br>
+                    <span class="text-pink-500 text-sm mt-2 block"><i class="fas fa-exclamation-triangle"></i> 仅供娱乐，请勿当真</span>
+                </p>
+                <div class="flex gap-4">
+                    <button onclick="startTest()" class="btn-primary text-white font-bold py-3 px-10 rounded-full shadow-lg">
+                        开始诊断
+                    </button>
+                </div>
+            </div>
+
+            <!-- View: Quiz -->
+            <div id="view-quiz" class="hidden absolute inset-0 flex flex-col p-8">
+                <!-- Progress -->
+                <div class="w-full bg-gray-800 rounded-full h-2 mb-6">
+                    <div id="progress-bar" class="bg-pink-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                
+                <div class="flex justify-between text-xs text-gray-500 mb-2 uppercase tracking-widest">
+                    <span id="question-counter">Question 1/15</span>
+                    <span id="category-tag">Dependency</span>
+                </div>
+
+                <div id="question-container" class="flex-grow flex flex-col justify-center fade-in">
+                    <h3 id="question-text" class="text-xl md:text-2xl font-bold text-white mb-8 leading-relaxed">
+                        Loading...
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <button onclick="selectOption('A')" id="btn-a" class="option-card w-full p-5 rounded-xl text-left group">
+                            <div class="flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-gray-800 text-pink-500 flex items-center justify-center font-bold mr-4 group-hover:bg-pink-600 group-hover:text-white transition">A</span>
+                                <span id="text-a" class="text-gray-300 group-hover:text-white">Option A</span>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectOption('B')" id="btn-b" class="option-card w-full p-5 rounded-xl text-left group">
+                            <div class="flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-gray-800 text-pink-500 flex items-center justify-center font-bold mr-4 group-hover:bg-pink-600 group-hover:text-white transition">B</span>
+                                <span id="text-b" class="text-gray-300 group-hover:text-white">Option B</span>
+                            </div>
+                        </button>
+
+                         <button onclick="selectOption('C')" id="btn-c" class="option-card w-full p-5 rounded-xl text-left group hidden">
+                            <div class="flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-gray-800 text-pink-500 flex items-center justify-center font-bold mr-4 group-hover:bg-pink-600 group-hover:text-white transition">C</span>
+                                <span id="text-c" class="text-gray-300 group-hover:text-white">Option C</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View: Loading -->
+            <div id="view-loading" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-black/90 z-20">
+                <div class="relative w-24 h-24 mb-4">
+                    <div class="absolute inset-0 border-4 border-pink-900 rounded-full"></div>
+                    <div class="absolute inset-0 border-4 border-pink-500 rounded-full border-t-transparent animate-spin"></div>
+                    <i class="fas fa-heart absolute inset-0 flex items-center justify-center text-pink-500 text-2xl animate-pulse"></i>
+                </div>
+                <h3 class="text-xl text-pink-500 font-mono animate-pulse">Analyzing Psyche...</h3>
+            </div>
+
+            <!-- View: Result -->
+            <div id="view-result" class="hidden absolute inset-0 overflow-y-auto p-8">
+                <div class="text-center mb-8">
+                    <div class="inline-block p-4 rounded-full bg-pink-900/30 border border-pink-500/50 mb-4">
+                        <i class="fas fa-user-secret text-4xl text-pink-500"></i>
+                    </div>
+                    <h2 class="text-4xl font-bold text-white mb-2 yandere-font" id="result-title">TYPE</h2>
+                    <p class="text-pink-400 text-lg font-medium mb-4" id="result-subtitle">Subtitle</p>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-xl mx-auto" id="result-desc">Description</p>
+                </div>
+
+                <div class="bg-gray-900/50 rounded-xl p-6 mb-8 border border-gray-800">
+                    <h4 class="text-gray-300 font-bold mb-4 text-center">病娇维度分析</h4>
+                    <div class="h-64 w-full">
+                        <canvas id="resultChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-pink-600">
+                        <h5 class="text-pink-500 font-bold mb-2"><i class="fas fa-star mr-2"></i>核心特质</h5>
+                        <ul id="traits-list" class="text-sm text-gray-400 space-y-1 list-disc list-inside"></ul>
+                    </div>
+                    <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-red-600">
+                        <h5 class="text-red-500 font-bold mb-2"><i class="fas fa-skull mr-2"></i>危险信号</h5>
+                        <ul id="warnings-list" class="text-sm text-gray-400 space-y-1 list-disc list-inside"></ul>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="restartTest()" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-6 rounded-lg transition">
+                        <i class="fas fa-redo mr-2"></i>重测
+                    </button>
+                    <button onclick="saveResult()" id="btn-save" class="bg-pink-600 hover:bg-pink-700 text-white py-2 px-6 rounded-lg transition shadow-lg shadow-pink-900/50">
+                        <i class="fas fa-save mr-2"></i>保存档案
+                    </button>
+                </div>
+            </div>
+
+            <!-- View: History -->
+            <div id="view-history" class="hidden absolute inset-0 overflow-y-auto p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">测试档案库</h2>
+                    <button onclick="backToWelcome()" class="text-gray-400 hover:text-white"><i class="fas fa-arrow-left"></i> 返回</button>
+                </div>
+                <div id="history-list" class="space-y-3">
+                    <!-- Items -->
+                </div>
+                <div class="mt-8 text-center">
+                     <button onclick="clearHistory()" class="text-red-500/70 hover:text-red-500 text-sm underline">清空所有档案</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="mt-6 text-gray-600 text-xs z-10">
+        &copy; 2026 Yandere Test Project. Psychological Entertainment Only.
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
