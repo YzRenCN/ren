@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我是人免费测试</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <!-- Header -->
+    <header class="max-w-5xl mx-auto mb-10 text-center">
+        <div class="inline-block bg-white/10 backdrop-blur-sm px-6 py-2 rounded-full mb-6">
+            <a href="https://ren.rensite.cn/" target="_blank" class="text-white/90 hover:text-white text-sm font-medium flex items-center gap-2">
+                <i class="fas fa-home"></i> 我是人博客
+            </a>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">我是人免费测试</h1>
+        <p class="text-white/80 text-lg max-w-2xl mx-auto">
+            整合所有趣味心理、智商、性格测试资源，一站式体验全部内容
+        </p>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Test Card 1 -->
+        <a href="https://ren.rensite.cn/bingjiao.html" target="_blank" class="glass-card rounded-2xl p-6 block">
+            <div class="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center mb-4">
+                <i class="fas fa-heart-crack text-purple-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">病娇测试</h3>
+            <p class="text-gray-500 text-sm mb-4">趣味性格测试，探索你的隐藏病娇属性</p>
+            <span class="text-purple-600 text-sm font-medium flex items-center gap-1">
+                立即体验 <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <!-- Test Card 2 -->
+        <a href="https://ren.rensite.cn/mbit.js" target="_blank" class="glass-card rounded-2xl p-6 block">
+            <div class="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+                <i class="fas fa-user-tag text-blue-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">MBTI性格测试</h3>
+            <p class="text-gray-500 text-sm mb-4">经典16型人格测试，了解你的性格类型</p>
+            <span class="text-blue-600 text-sm font-medium flex items-center gap-1">
+                立即体验 <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <!-- Test Card 3 -->
+        <a href="https://ren.rensite.cn/iq/html" target="_blank" class="glass-card rounded-2xl p-6 block">
+            <div class="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center mb-4">
+                <i class="fas fa-brain text-green-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">IQ测试（HTML版）</h3>
+            <p class="text-gray-500 text-sm mb-4">专业智商评估，测试你的逻辑思维能力</p>
+            <span class="text-green-600 text-sm font-medium flex items-center gap-1">
+                立即体验 <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <!-- Test Card 4 -->
+        <a href="https://ren.rensite.cn/ai.html" target="_blank" class="glass-card rounded-2xl p-6 block">
+            <div class="w-14 h-14 rounded-xl bg-pink-100 flex items-center justify-center mb-4">
+                <i class="fas fa-robot text-pink-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">AI相关测试</h3>
+            <p class="text-gray-500 text-sm mb-4">趣味AI互动测试，探索人工智能相关趣味内容</p>
+            <span class="text-pink-600 text-sm font-medium flex items-center gap-1">
+                立即体验 <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <!-- Test Card 5 -->
+        <a href="https://ren.rensite.cn/iq.html" target="_blank" class="glass-card rounded-2xl p-6 block">
+            <div class="w-14 h-14 rounded-xl bg-orange-100 flex items-center justify-center mb-4">
+                <i class="fas fa-lightbulb text-orange-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">IQ测试（完整版）</h3>
+            <p class="text-gray-500 text-sm mb-4">完整维度智商测试，获取详细能力分析报告</p>
+            <span class="text-orange-600 text-sm font-medium flex items-center gap-1">
+                立即体验 <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <!-- Test Card 6 -->
+        <a href="https://ren.rensite.cn/xin.html" target="_blank" class="glass-card rounded-2xl p-6 block">
+            <div class="w-14 h-14 rounded-xl bg-red-100 flex items-center justify-center mb-4">
+                <i class="fas fa-heart-pulse text-red-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">心理测试合集</h3>
+            <p class="text-gray-500 text-sm mb-4">丰富的趣味心理测试，探索你的内心世界</p>
+            <span class="text-red-600 text-sm font-medium flex items-center gap-1">
+                立即体验 <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-5xl mx-auto mt-16 text-center text-white/70 text-sm">
+        <p>我是人博客<a href="https://ren.rensite.cn/" target="_blank" class="text-white hover:underline">我是人博客</a>，仅供娱乐参考</p>
+    </footer>
+</body>
+</html>
